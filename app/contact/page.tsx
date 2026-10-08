@@ -17,13 +17,12 @@ export default function ContactPage() {
             eyebrow="Contact"
             level={1}
             title="Let’s talk about your business."
-            description="Tell us what you’re trying to improve, build or automate. You don’t need to have the technical solution figured out."
+            description="Tell us what you’re trying to improve, build or automate. You don’t need to have the technical solution figured out to start a useful conversation."
           />
 
-          <div className="mt-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.05)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Configuration note</p>
-            <p className="mt-4 text-base leading-7 text-slate-600">
-              Contact details and inbox routing can be configured later for a live business workflow. The form currently validates inputs in your browser but does not send or store enquiries.
+          <div className="mt-8 border-l-2 border-teal-700 pl-5">
+            <p className="text-base leading-7 text-slate-600">
+              Share a little about your organization and what you’d like to change. We’ll use your enquiry to understand the context and follow up using your preferred contact method.
             </p>
           </div>
         </div>

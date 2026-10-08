@@ -16,6 +16,16 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Contact enquiry email
+
+The contact form submits to the server-side `/api/contact` route. Email delivery uses the Resend REST API and requires these server-only environment variables:
+
+- `RESEND_API_KEY` — API key for the Resend account.
+- `CONTACT_TO_EMAIL` — inbox that should receive KEIBUL enquiries.
+- `CONTACT_FROM_EMAIL` — sender address verified with Resend.
+
+Copy `.env.example` to `.env.local` for local development and fill in the values. Add the same variables to the production hosting environment; never use a `NEXT_PUBLIC_` prefix or commit real credentials. The route validates submissions and returns a visitor-friendly temporary error when the email configuration is missing or the provider cannot accept a message. No enquiry is stored if email delivery is unavailable.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

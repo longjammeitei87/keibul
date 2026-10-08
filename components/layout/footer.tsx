@@ -31,7 +31,7 @@ export function Footer() {
           <ul>
             <li><Link href="/contact">Book a Consultation</Link></li>
             <li><Link href="/faq">Frequently asked questions</Link></li>
-            <li><span>Contact details available after configuration</span></li>
+            <li><Link href="/contact">Send an enquiry</Link></li>
           </ul>
         </div>
       </div>
