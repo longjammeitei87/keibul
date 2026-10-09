@@ -124,52 +124,73 @@ textarea {
   z-index: 50;
   top: 0;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
-  background: color-mix(in srgb, var(--background) 96%, transparent);
+  background: var(--background);
 }
 
 .header-inner {
   display: flex;
   width: min(100% - 3rem, 78rem);
-  min-height: 5rem;
+  min-height: 4.5rem;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem;
   margin-inline: auto;
 }
 
 .brand-lockup {
   display: inline-flex;
   flex: 0 0 auto;
-  align-items: baseline;
-  gap: 0.8rem;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--brand-primary);
+}
+
+.brand-mark {
+  display: block;
+  width: 2.15rem;
+  height: 2.15rem;
+  flex: 0 0 auto;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.08rem;
 }
 
 .brand-name {
   color: var(--navy);
-  font-size: 1.45rem;
-  font-weight: 750;
-  letter-spacing: 0.14em;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1;
 }
 
 .brand-descriptor {
   color: var(--muted);
-  font-size: 0.67rem;
-  font-weight: 600;
-  letter-spacing: 0.055em;
+  font-size: 0.53rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .desktop-nav {
   display: flex;
+  flex: 0 1 auto;
   align-items: center;
-  gap: clamp(1rem, 2vw, 1.8rem);
+  gap: clamp(0.55rem, 1.15vw, 1.05rem);
 }
 
 .nav-link {
   position: relative;
-  padding-block: 0.5rem;
+  padding-block: 0.45rem;
   color: var(--brand-secondary);
-  font-size: 0.88rem;
-  font-weight: 550;
+  font-size: 0.76rem;
+  font-weight: 600;
+  white-space: nowrap;
   transition: color 160ms ease;
 }
 
@@ -190,6 +211,15 @@ textarea {
   color: var(--accent-strong);
 }
 
+.nav-link.is-active {
+  color: var(--brand-primary);
+}
+
+.nav-link.is-active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
 .nav-link:hover::after {
   transform: scaleX(1);
   transform-origin: left;
@@ -203,10 +233,17 @@ textarea {
 }
 
 .header-consultation {
-  min-height: 2.75rem;
-  padding: 0.7rem 1rem;
-  font-size: 0.83rem;
+  min-height: 2.55rem;
+  gap: 0.55rem;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.76rem;
   white-space: nowrap;
+}
+
+.header-cta-arrow {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex: 0 0 auto;
 }
 
 .header-cta-short {
@@ -277,6 +314,14 @@ textarea {
 
 .mobile-nav-link span {
   color: var(--accent);
+}
+
+.mobile-nav-link.is-active {
+  color: var(--brand-primary);
+}
+
+.mobile-nav-link.is-active span {
+  color: var(--brand-primary);
 }
 
 .mobile-nav-cta {
@@ -908,7 +953,7 @@ textarea {
 .service-card > p {
   min-height: 3.4rem;
   margin: 0.7rem 0 0;
-  color: var(--muted);
+  color: #354843;
   font-size: 0.95rem;
   line-height: 1.6;
 }
@@ -971,7 +1016,7 @@ textarea {
 .industry-item p {
   max-width: 23rem;
   margin: 0.65rem 2rem 0 0;
-  color: var(--muted);
+  color: #354843;
   font-size: 0.9rem;
   line-height: 1.65;
 }
@@ -1858,6 +1903,10 @@ textarea {
 
   .header-cta-short {
     display: inline;
+  }
+
+  .header-cta-arrow {
+    display: none;
   }
 
   .menu-toggle {
