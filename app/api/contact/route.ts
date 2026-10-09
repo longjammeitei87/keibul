@@ -1,29 +1,15 @@
 import {
-  contactFieldLabels,
-  contactFieldNames,
-  contactFieldLimits,
-  contactMethods,
-  contactServices,
   isEmailAddress,
-  normalizeContactField,
-  type ContactFieldErrors,
+  validateSubmission,
   type ContactSubmission,
 } from '@/lib/contact';
-
-const maximumRequestSize = 16_384;
-
-function jsonResponse(body: object, status: number): Response {
-  return Response.json(body, {
-    status,
-    headers: {
-      'Cache-Control': 'no-store',
-    },
-  });
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
+import {
+  isRecord,
+  jsonResponse,
+  readRequestBody,
+  validateContentLength,
+  validateRequestOrigin,
+} from '@/lib/contact-request';
 
 function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (character) => {
@@ -37,56 +23,6 @@ function escapeHtml(value: string): string {
 
     return entities[character];
   });
-}
-
-function validateSubmission(input: Record<string, unknown>): {
-  submission: ContactSubmission;
-  errors: ContactFieldErrors;
-} {
-  const submission: ContactSubmission = {
-    name: '',
-    business: '',
-    email: '',
-    phone: '',
-    service: '',
-    description: '',
-    contactMethod: '',
-  };
-  const errors: ContactFieldErrors = {};
-
-  for (const field of contactFieldNames) {
-    const value = input[field];
-    if (typeof value !== 'string') {
-      errors[field] = `${contactFieldLabels[field]} is required.`;
-      submission[field] = '';
-      continue;
-    }
-
-    const normalized = normalizeContactField(value, field);
-    submission[field] = normalized;
-    if (!normalized) {
-      errors[field] = `${contactFieldLabels[field]} is required.`;
-    } else if (value.length > contactFieldLimits[field]) {
-      errors[field] = `${contactFieldLabels[field]} is too long.`;
-    }
-  }
-
-  if (submission.email && !isEmailAddress(submission.email)) {
-    errors.email = 'Enter a valid email address.';
-  }
-
-  if (submission.service && !contactServices.some((service) => service === submission.service)) {
-    errors.service = 'Choose an area of interest from the list.';
-  }
-
-  if (
-    submission.contactMethod &&
-    !contactMethods.some((method) => method === submission.contactMethod)
-  ) {
-    errors.contactMethod = 'Choose a preferred contact method from the list.';
-  }
-
-  return { submission, errors };
 }
 
 function getEmailConfiguration(): { apiKey: string; toEmail: string; fromEmail: string } | null {
@@ -106,16 +42,6 @@ function getEmailConfiguration(): { apiKey: string; toEmail: string; fromEmail: 
   }
 
   return { apiKey, toEmail, fromEmail };
-}
-
-function redactSensitiveValues(value: string, sensitiveValues: string[]): string {
-  const redacted = sensitiveValues.reduce(
-    (result, sensitiveValue) =>
-      sensitiveValue ? result.split(sensitiveValue).join('[redacted]') : result,
-    value,
-  );
-
-  return redacted.slice(0, 500);
 }
 
 function getEmailContent(submission: ContactSubmission): { text: string; html: string } {
@@ -147,30 +73,24 @@ function getEmailContent(submission: ContactSubmission): { text: string; html: s
 }
 
 export async function POST(request: Request): Promise<Response> {
-  const contentLength = Number(request.headers.get('content-length') ?? 0);
-  if (contentLength > maximumRequestSize) {
-    return jsonResponse({ ok: false, message: 'Your enquiry is too large. Please shorten it and try again.' }, 413);
+  const contentLengthResponse = validateContentLength(request);
+  if (contentLengthResponse) {
+    return contentLengthResponse;
   }
 
-  const origin = request.headers.get('origin');
-  if (origin) {
-    try {
-      if (new URL(origin).origin !== new URL(request.url).origin) {
-        return jsonResponse({ ok: false, message: 'We could not verify this request. Please refresh the page and try again.' }, 403);
-      }
-    } catch {
-      return jsonResponse({ ok: false, message: 'We could not verify this request. Please refresh the page and try again.' }, 403);
-    }
+  const originResponse = validateRequestOrigin(request);
+  if (originResponse) {
+    return originResponse;
   }
 
-  const rawBody = await request.text();
-  if (rawBody.length > maximumRequestSize) {
-    return jsonResponse({ ok: false, message: 'Your enquiry is too large. Please shorten it and try again.' }, 413);
+  const bodyResult = await readRequestBody(request);
+  if (!bodyResult.ok) {
+    return bodyResult.response;
   }
 
   let body: unknown;
   try {
-    body = JSON.parse(rawBody);
+    body = JSON.parse(bodyResult.body);
   } catch {
     return jsonResponse({ ok: false, message: 'Please check your details and try again.' }, 400);
   }
@@ -236,29 +156,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   if (!providerResponse.ok) {
-    let providerError = '';
-    try {
-      const responseBody: unknown = await providerResponse.json();
-      if (isRecord(responseBody)) {
-        const name = typeof responseBody.name === 'string' ? responseBody.name : '';
-        const message = typeof responseBody.message === 'string' ? responseBody.message : '';
-        providerError = [name, message].filter(Boolean).join(': ');
-      }
-    } catch (error) {
-      console.error(
-        `Contact enquiry email provider returned an unreadable error response (status ${providerResponse.status}; ${error instanceof Error ? error.name : 'unknown error'}).`,
-      );
-    }
-
-    const details = redactSensitiveValues(providerError, [
-      emailConfiguration.apiKey,
-      emailConfiguration.toEmail,
-      emailConfiguration.fromEmail,
-      ...Object.values(submission),
-    ]);
-    console.error(
-      `Contact enquiry email delivery failed with status ${providerResponse.status}${details ? `: ${details}` : '.'}`,
-    );
+    console.error(`Contact enquiry email delivery failed with status ${providerResponse.status}.`);
     return jsonResponse(
       { ok: false, message: 'We couldn’t send your enquiry just now. Please try again shortly.' },
       502,

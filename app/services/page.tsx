@@ -26,18 +26,18 @@ export default function ServicesPage() {
             <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
               <div>
                 <p className="section-kicker">Service</p>
-                <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900">{service.title}</h2>
+                <h2 className="mt-4 text-3xl font-semibold tracking-tight text-foreground">{service.title}</h2>
               </div>
               <div>
-                <p className="inline-flex rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">
+                <p className="inline-flex rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-primary">
                   Business outcome
                 </p>
-                <p className="mt-4 text-lg leading-8 text-slate-600">{service.description}</p>
+                <p className="mt-4 text-lg leading-8 text-muted">{service.description}</p>
               </div>
             </div>
             <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {service.outcomes.map((item) => (
-                <div key={item} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-medium text-slate-700">
+                <div key={item} className="rounded-2xl border border-border bg-background p-4 text-sm font-medium text-foreground">
                   {item}
                 </div>
               ))}

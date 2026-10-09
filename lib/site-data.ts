@@ -132,3 +132,10 @@ export const siteConfig = {
   tagline: 'Built from Northeast India. Designed for modern businesses.',
   url: 'https://www.keibul.com',
 };
+
+export const businessContact = {
+  address:
+    'Oinam Mayai Leikei, Ushakhandabi Leirak, PO/PS Nambol, Bishnupur District, Manipur, India - 795134',
+  phone: '+919863497142',
+  phoneLink: 'tel:+919863497142',
+};

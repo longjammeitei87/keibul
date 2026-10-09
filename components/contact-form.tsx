@@ -144,7 +144,7 @@ export function ContactForm() {
   const isInvalid = (field: ContactFieldName) => Boolean(fieldErrors[field]);
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.08)] sm:p-8">
+    <div className="card-surface p-6 sm:p-8">
       <form className="space-y-5" onSubmit={handleSubmit} noValidate>
         <div className="grid gap-5 sm:grid-cols-2">
           <div>

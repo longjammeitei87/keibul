@@ -60,3 +60,53 @@ export function normalizeContactField(value: string, field: ContactFieldName): s
 export function isEmailAddress(value: string): boolean {
   return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
+
+export function validateSubmission(input: Record<string, unknown>): {
+  submission: ContactSubmission;
+  errors: ContactFieldErrors;
+} {
+  const submission: ContactSubmission = {
+    name: '',
+    business: '',
+    email: '',
+    phone: '',
+    service: '',
+    description: '',
+    contactMethod: '',
+  };
+  const errors: ContactFieldErrors = {};
+
+  for (const field of contactFieldNames) {
+    const value = input[field];
+    if (typeof value !== 'string') {
+      errors[field] = `${contactFieldLabels[field]} is required.`;
+      submission[field] = '';
+      continue;
+    }
+
+    const normalized = normalizeContactField(value, field);
+    submission[field] = normalized;
+    if (!normalized) {
+      errors[field] = `${contactFieldLabels[field]} is required.`;
+    } else if (value.length > contactFieldLimits[field]) {
+      errors[field] = `${contactFieldLabels[field]} is too long.`;
+    }
+  }
+
+  if (submission.email && !isEmailAddress(submission.email)) {
+    errors.email = 'Enter a valid email address.';
+  }
+
+  if (submission.service && !contactServices.some((service) => service === submission.service)) {
+    errors.service = 'Choose an area of interest from the list.';
+  }
+
+  if (
+    submission.contactMethod &&
+    !contactMethods.some((method) => method === submission.contactMethod)
+  ) {
+    errors.contactMethod = 'Choose a preferred contact method from the list.';
+  }
+
+  return { submission, errors };
+}

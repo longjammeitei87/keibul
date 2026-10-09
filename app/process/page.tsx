@@ -22,10 +22,10 @@ export default function ProcessPage() {
       <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {processSteps.map((step) => (
           <div key={step.number} className="card-surface relative overflow-hidden rounded-[2rem] p-6">
-            <div className="absolute right-5 top-5 h-16 w-16 rounded-full bg-teal-50" />
-            <p className="relative text-sm font-semibold uppercase tracking-[0.2em] text-teal-700">{step.number}</p>
-            <h2 className="relative mt-5 text-2xl font-semibold text-slate-900">{step.title}</h2>
-            <p className="relative mt-4 text-base leading-7 text-slate-600">{step.description}</p>
+            <div className="absolute right-5 top-5 h-16 w-16 rounded-full bg-accent-soft" />
+            <p className="relative text-sm font-semibold uppercase tracking-[0.2em] text-brand-primary">{step.number}</p>
+            <h2 className="relative mt-5 text-2xl font-semibold text-foreground">{step.title}</h2>
+            <p className="relative mt-4 text-base leading-7 text-muted">{step.description}</p>
           </div>
         ))}
       </div>

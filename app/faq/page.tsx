@@ -21,10 +21,10 @@ export default function FaqPage() {
       <div className="mt-10 space-y-4">
         {faqItems.map((item, index) => (
           <details key={item.question} className="card-surface rounded-2xl p-5" open={index === 0}>
-            <summary className="cursor-pointer list-none text-lg font-semibold text-slate-900">
+            <summary className="cursor-pointer list-none text-lg font-semibold text-foreground">
               {item.question}
             </summary>
-            <p className="mt-3 leading-7 text-slate-600">{item.answer}</p>
+            <p className="mt-3 leading-7 text-muted">{item.answer}</p>
           </details>
         ))}
       </div>

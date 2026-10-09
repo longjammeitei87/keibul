@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { siteConfig } from '@/lib/site-data';
+import { businessContact, siteConfig } from '@/lib/site-data';
 
 const currentYear = 2026;
 
@@ -13,6 +13,11 @@ export function Footer() {
           </Link>
           <p className="footer-descriptor">{siteConfig.descriptor}</p>
           <p className="footer-tagline">{siteConfig.tagline}</p>
+          <div className="footer-contact">
+            <h3>Contact</h3>
+            <address>{businessContact.address}</address>
+            <a href={businessContact.phoneLink}>{businessContact.phone}</a>
+          </div>
         </div>
 
         <div className="footer-column">

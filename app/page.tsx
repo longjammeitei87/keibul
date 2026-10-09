@@ -60,7 +60,10 @@ export default function Home() {
         <div className="hero-inner">
           <div className="hero-copy">
             <p className="section-kicker">{siteConfig.descriptor}</p>
-            <h1>Turn business challenges into practical solutions.</h1>
+            <h1>
+              Business thinking. Technology solutions.{' '}
+              <span className="hero-highlight">Real results.</span>
+            </h1>
             <p className="hero-description">
               We help businesses improve operations, find growth opportunities and put practical technology to work.
             </p>
@@ -68,8 +71,8 @@ export default function Home() {
               <Link href="/contact" className="button-primary">
                 Book a Consultation
               </Link>
-              <Link href="/solutions" className="button-secondary">
-                Explore Our Solutions
+              <Link href="/services" className="button-secondary">
+                Explore Our Services
               </Link>
             </div>
             <p className="hero-tagline">{siteConfig.tagline}</p>
